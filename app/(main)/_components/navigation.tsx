@@ -10,7 +10,7 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
@@ -35,6 +35,7 @@ export const Navigation = ({}: NavigationProps) => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const params = useParams();
+  const router = useRouter();
 
   const search = useSearch();
   const settings = useSettings();
@@ -49,7 +50,9 @@ export const Navigation = ({}: NavigationProps) => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile); // to show menu icon
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" });
+    const promise = create({ title: "Untitled" }).then((documentId) =>
+      router.push(`/documents/${documentId}`)
+    );
 
     toast.promise(promise, {
       loading: "Creating a new note...",
